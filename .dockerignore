@@ -1,4 +1,6 @@
-../.git
+./.git
 test
 README.md
-cmd
+node_modules
+LICENSE
+./test

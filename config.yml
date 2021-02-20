@@ -1,6 +1,6 @@
 - datasource:
       name: MooniSwapMain
-      client: Ethereum/Mainnet
+      client:
         name: ethereum
         network: testnet
         startBlock: 10634502

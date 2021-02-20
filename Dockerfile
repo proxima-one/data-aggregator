@@ -1,10 +1,6 @@
-# set up environment image
-
-# copy the files
-
-
-# environment files
-
-# install
-
-# run the file 
+FROM node:12
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD [ "npm", "start" ]

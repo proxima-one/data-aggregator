@@ -1,57 +1,41 @@
+'use strict'
 
+const Datasource = require('./Datasource.js')
 
 class DatasourceTemplate {
 
-  constructor(name, abiCode, eventHandlers, functionPolls, args = {}) {
+  constructor(name, abi, abis, handlers, args = {}) {
     this.name = name;
-    this.abiCode = abiCode;
+    this.abi = abi;
     this.abis = abis;
-    this.client;
-    this.vertex;
-    this.eventHandlers = eventHandlers;
-    this.functionPolls = functionPolls;
+    this.handlers = handlers;
+    this.client = args.client;
+    this.vertex = args.vertex;
     this.datasources = {};
   }
 
-  create(contractAddress, client) {
-    var contractListener = new SmartContractListener(contractAddress, this.abiCode, this.eventHandlers, this.functionPolls, {client: client});
-    this.smartContractListeners[contractAddress] = contractListener;
-    return contractListener;
+  create(contractAddress, client = this.client, vertex = this.vertex) {
+    this.Datasources[contractAddress] = new Datasource(this.name, contractAddress, this.abi, this.abis, this.handlers, client, vertex);
+    return this.Datasources[contractAddress];
   }
 
   remove(contractAddress) {
-    var contractListener;
-    contractlistener.stop();
-    this.smartContractListeners[contractAddress] = null;
+    let d = this.Datasources[contractAddress]
+    d.stop();
+    this.Datasources[contractAddress] = null;
   }
 
-  start(contractAddress) {
-    let contractListener = this.smartContractListeners[contractAddress]
-    if (contractlistener) {
-      contractListener.start();
+  start() {
+    for (var contractAddress in this.Datasources) {
+      this.Datasources[contractAddress].start();
     }
   }
 
-  startAll() {
-    var contractListener;
-    for (var contractAddress in this.smartContracts) {
-      contractListener = this.smartContracts[contractAddress];
-      contractListener.start();
-    }
-  }
-
-  stop(contractAddress) {
-    let contractListener = this.smartContractListeners[contractAddress]
-    if (contractlistener) {
-      contractListener.stop();
-    }
-  }
-
-  stopAll() {
-    var contractListener;
-    for (var contractAddress in this.smartContracts) {
-      contractListener = this.smartContracts[contractAddress];
-      contractListener.stop();
+  stop() {
+    for (var contractAddress in this.Datasources) {
+      this.Datasources[contractAddress].stop();
     }
   }
 }
+
+module.exports = DatasourceTemplate

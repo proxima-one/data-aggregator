@@ -1,36 +1,52 @@
+'use strict';
+
+//const blockchainListener
+//vertex client
+
+
 class Datasource {
 
-  constructor(contractAddress, contractCode, eventHandlers, functionPolling, args = {}) {
-    this.status = CREATED;
-    this.eventHandlers = eventHanlders;
-    this.client = args.client;
-    this.eventSubscription;
-    
-    this.vertex;
-    //vertex all of the handlers need to be involved in
-    //create the client...
-    //load smart contract ...
-    //load the handlers
-    // block
-    // event
-    // function
-    // polls
-    // stats handler
-    //clientError (handled by the client)
-    //vertexError (handled by the vertex)
-    //other error (resync from last correct place)
+  constructor(name, contractAddress, abi, contracts, handlers, client, vertexClient, args = {}) {
+    this.name = name;
+    this.handlers = hanlders;
+    this.client = client;
+    this.abi = abi;
+    this.contracts = contracts;
+    this.contractAddress = contractAddress;
+    this.vertexClient = vertexClient;
+    this.listeners = [];
+    //smartContractListener
+    this.initListeners()
+  }
 
-
-    //start
-    //add datasource
-    //synchronizationHandler (default)
-    //synchronize
-    //subscribe
-
-    if (!this.client) {
-      const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io:443');
-      this.client = new Web3(provider);
+  initListeners() {
+    for (var handler of this.handlers) {
+      switch case(handler.type) {
+          case Block:
+            this.listeners.append(client.blockListener(contractAddress, handler))
+          case Event:
+            this.listeners.append(client.eventListener(contractAddress, abi, handler))
+          case Transaction:
+            this.listeners.append(client.transactionListener(contractAddress, handler))
+          case Function:
+            this.listeners.append(client.functionListener(contractAddress, abi, handler))
+      }
     }
-    this.contract = this.client.eth.Contract(contractAddress, contractCode);
+  }
+
+  start() {
+    this.listeners.forEach(listener => listener.start());
+  }
+  stop() {
+    this.listeners.forEach(listener => listener.stop());
+  }
+  sync() {
+    this.listeners.forEach(listener => listener.sync());
+  }
+  subscribe() {
+    this.listeners.forEach(listener => listener.subscribe());
   }
 }
+
+
+module.exports = Datasource;
