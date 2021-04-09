@@ -45,19 +45,12 @@ npm test
 ## Design
 The Data Aggregator is designed to pull data from datasources, transform the events, and then pushing updates to its given data vertex. To do this, it utilizes the Proxima SDK, and a combination of datasources with given blockchain clients and their respective event handlers.
 
-
 <!--
-
 init()
-
 addDatasource()
-
 addDatasourceTemplate()
-
 start()
-
 stop()
-
 
 Datasource
 //Config
@@ -70,11 +63,8 @@ Data sources
 Blockchain Clients  
 Event handlers
 
-
 Documentation
-
 Installation
-
 Running
 -->
 
